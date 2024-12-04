@@ -16,13 +16,45 @@ def pt1():
     with open('./2020/d07.txt') as f:
         lines = f.read().splitlines()
         data = parse(lines)
-        for d in data:
-            print(d)
+        lookup = {}
+        for name,bags in data:
+            l = []
+            for _,b in bags:
+                l.append(b)
+            lookup[name] = l
+        def contains(name: str) -> bool:
+            l = lookup[name]
+            if 'shiny gold' in l:
+                return True
+            for n in l:
+                if contains(n):
+                    return True
+            return False
+        total = 0
+        # print(contains('faded blue'))
+        for name in lookup.keys():
+            if contains(name):
+                total += 1
+        print(total)
 
 def pt2():
     with open('./2020/d07.txt') as f:
         lines = f.read().splitlines()
-        print(lines)
+        data = parse(lines)
+        mem = {}
+        lookup = {}
+        for name,bags in data:
+            lookup[name] = bags
+        def count(name: str) -> int:
+            if name in mem:
+                return mem[name]
+            total = 0
+            for c,n in lookup[name]:
+                total += c * count(n) + c
+            mem[name] = total
+            return total
+        print(count('shiny gold'))
+        
 
-pt1()
-# pt2()
+# pt1()
+pt2()
